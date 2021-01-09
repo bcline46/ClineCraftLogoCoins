@@ -23,11 +23,17 @@ HashMap<String,ArrayList<CSG>> csgByLayers = s.extrudeLayers(10)
 def holeParts = s.extrudeLayerToCSG(10,"1-Holes")
 .movez(3)
 // seperate holes and outsides using layers to differentiate
-def outsideParts = s.extrudeLayerToCSG(8,"2-Letters")
+def outsideParts = s.extrudeLayerToCSG(4,"2-Letters")
 					.difference(holeParts)
 // layers can be extruded at different depths					
-def boarderParts = s.extrudeLayerToCSG(6,"3-Flag")
-def BladeParts1 = s.extrudeLayerToCSG(4,"4-Blade")
-.difference(holeParts)
+def flag = s.extrudeLayerToCSG(4.5,"3-Flag")
+					.movez(3)
 def FlagParts1 = s.extrudeLayerToCSG(2,"3.5-FlagOutside")
-return [CSG.unionAll([boarderParts,outsideParts,BladeParts1,FlagParts1])]
+					.movez(3)
+def BladeParts1 = s.extrudeLayerToCSG(4,"4-Blade")
+				.difference(holeParts)
+				.difference(FlagParts1)
+				.difference(flag)
+
+
+return [CSG.unionAll([outsideParts,BladeParts1])]
